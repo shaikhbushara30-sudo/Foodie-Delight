@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Foodie Delight</title>
+    <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-login-body">
+    <div class="admin-login-box">
+        <img src="/img/logo.png" alt="Logo" class="admin-login-logo">
+        <h1>Admin Login</h1>
+
+        <% if (typeof error !== 'undefined' && error && error.length) { %>
+            <div class="flash-message flash-error"><%= error[0] %></div>
+        <% } %>
+        <% if (typeof success !== 'undefined' && success && success.length) { %>
+            <div class="flash-message flash-success"><%= success[0] %></div>
+        <% } %>
+
+        <form action="/admin/login" method="POST">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+        <p class="admin-login-hint">Only authorized admins can access this panel.</p>
+    </div>
+</body>
+</html>

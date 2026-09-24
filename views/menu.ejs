@@ -1,0 +1,35 @@
+<section class="menu-page">
+    <div class="container">
+        <div class="menu-header">
+            <h1>Our Delicious Menu</h1>
+            <p>Explore our wide selection of mouth-watering dishes</p>
+        </div>
+
+        <div class="filter-buttons">
+            <a href="/menu?category=all" class="filter-btn <%= activeCategory === 'all' ? 'active' : '' %>">All Items</a>
+            <% categories.forEach(cat => { %>
+                <a href="/menu?category=<%= cat %>" class="filter-btn <%= activeCategory === cat ? 'active' : '' %>">
+                    <%= cat.charAt(0).toUpperCase() + cat.slice(1) %>
+                </a>
+            <% }) %>
+        </div>
+
+        <div class="food-grid" id="menuFoods">
+            <% if (foods && foods.length) { %>
+                <% foods.forEach(food => { %>
+                    <div class="food-card">
+                        <img src="/<%= food.image %>" alt="<%= food.name %>">
+                        <div class="food-info">
+                            <h3><%= food.name %></h3>
+                            <p><%= food.description %></p>
+                            <span class="price">₹<%= Number(food.price).toFixed(2) %></span>
+                            <button class="add-to-cart" data-id="<%= food.id %>" data-name="<%= food.name %>" data-price="<%= food.price %>" data-image="<%= food.image %>">Add to Cart</button>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>No items found in this category.</p>
+            <% } %>
+        </div>
+    </div>
+</section>

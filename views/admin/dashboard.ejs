@@ -1,0 +1,114 @@
+<%- include('../partials/admin-head') %>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <i class="fas fa-rupee-sign"></i>
+        <div>
+            <h3>₹<%= Number(totalRevenue).toFixed(2) %></h3>
+            <p>Total Revenue</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-receipt"></i>
+        <div>
+            <h3><%= totalOrders %></h3>
+            <p>Total Orders</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <div>
+            <h3><%= totalCustomers %></h3>
+            <p>Total Customers</p>
+        </div>
+    </div>
+    <div class="stat-card">
+        <i class="fas fa-envelope"></i>
+        <div>
+            <h3><%= unreadMessages %></h3>
+            <p>Unread Messages</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="dashboard-panel">
+        <h3>Revenue - Last 7 Days</h3>
+        <canvas id="revenueChart" height="120"></canvas>
+    </div>
+
+    <div class="dashboard-panel">
+        <h3>Orders by Status</h3>
+        <ul class="status-breakdown">
+            <% const allStatuses = ['pending','preparing','out_for_delivery','delivered','cancelled']; %>
+            <% allStatuses.forEach(s => {
+                const found = statusCounts.find(x => x.status === s);
+                const count = found ? found.count : 0;
+            %>
+                <li><span class="status-dot status-<%= s %>"></span> <%= s.replace(/_/g,' ') %> <strong><%= count %></strong></li>
+            <% }) %>
+        </ul>
+    </div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="dashboard-panel">
+        <h3>Recent Orders</h3>
+        <table class="admin-table">
+            <thead><tr><th>ID</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody>
+                <% recentOrders.forEach(o => { %>
+                    <tr>
+                        <td><a href="/admin/orders/<%= o.id %>">#<%= o.id %></a></td>
+                        <td><%= o.customer_name %></td>
+                        <td>₹<%= Number(o.total_amount).toFixed(2) %></td>
+                        <td><span class="order-status status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                        <td><%= new Date(o.created_at).toLocaleDateString() %></td>
+                    </tr>
+                <% }) %>
+                <% if (!recentOrders.length) { %>
+                    <tr><td colspan="5">No orders yet.</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="dashboard-panel">
+        <h3>Top Selling Items</h3>
+        <table class="admin-table">
+            <thead><tr><th>Item</th><th>Units Sold</th></tr></thead>
+            <tbody>
+                <% topSelling.forEach(t => { %>
+                    <tr><td><%= t.name %></td><td><%= t.total_sold %></td></tr>
+                <% }) %>
+                <% if (!topSelling.length) { %>
+                    <tr><td colspan="2">No sales data yet.</td></tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const revenueData = <%- JSON.stringify(revenue7Days) %>;
+    const labels = revenueData.map(r => new Date(r.day).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric' }));
+    const values = revenueData.map(r => Number(r.revenue));
+
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: labels.length ? labels : ['No data'],
+            datasets: [{
+                label: 'Revenue (₹)',
+                data: values.length ? values : [0],
+                borderColor: '#ff6b35',
+                backgroundColor: 'rgba(255,107,53,0.15)',
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+</script>
+
+<%- include('../partials/admin-foot') %>

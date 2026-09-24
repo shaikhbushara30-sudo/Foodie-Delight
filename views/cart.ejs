@@ -1,0 +1,57 @@
+<section class="cart-page">
+    <div class="container">
+        <h1>Your Cart</h1>
+
+        <div id="pageCartItems" class="page-cart-items">
+            <p class="empty-cart-message">Your cart is empty</p>
+        </div>
+
+        <div class="cart-summary">
+            <h3>Total: ₹<span id="pageCartTotal">0.00</span></h3>
+            <div class="form-group">
+                <label for="deliveryAddress">Delivery Address</label>
+                <input type="text" id="deliveryAddress" placeholder="Enter your delivery address" value="<%= currentUser && currentUser.address ? currentUser.address : '' %>">
+            </div>
+
+            <div class="form-group payment-method-group">
+                <label>Payment Method</label>
+                <div class="payment-options">
+                    <label class="payment-option">
+                        <input type="radio" name="paymentMethod" value="cod" checked>
+                        <span><i class="fas fa-money-bill-wave"></i> Cash on Delivery</span>
+                    </label>
+                    <label class="payment-option">
+                        <input type="radio" name="paymentMethod" value="online">
+                        <span><i class="fas fa-credit-card"></i> Pay Online (UPI / Card / Netbanking)</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="placeOrderBtn">Place Order</button>
+        </div>
+    </div>
+</section>
+
+<!-- Razorpay Checkout script -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+    window.CURRENT_USER_NAME = "<%= currentUser ? currentUser.name.replace(/\"/g, '') : '' %>";
+</script>
+
+<!-- Bill Preview Modal (populated after successful checkout) -->
+<div class="cart-modal" id="billModal">
+    <div class="cart-content" style="width: 90%; max-width: 700px;">
+        <div class="cart-header">
+            <h2>Order Bill Preview</h2>
+            <span class="close-btn" id="closeBill">&times;</span>
+        </div>
+        <div class="cart-body" style="padding: 20px;">
+            <div id="billPreview" style="white-space: pre-wrap; font-family: monospace; background: #f8f9fa; padding: 20px; border-radius: 5px; margin-bottom: 20px; max-height: 400px; overflow-y: auto;"></div>
+            <div class="cart-footer" style="display: flex; gap: 10px; justify-content: center;">
+                <button class="btn-primary" id="downloadTxt" style="background: #28a745;">Download as TXT</button>
+                <button class="btn-primary" id="downloadPdf" style="background: #dc3545;">Download as PDF</button>
+                <button class="btn-primary" id="closeBillBtn">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

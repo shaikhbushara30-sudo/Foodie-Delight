@@ -1,0 +1,28 @@
+{
+  "name": "foodie-delight-mvc",
+  "version": "1.0.0",
+  "description": "Foodie Delight - Online Food Ordering App (MVC, Node.js, Express, MySQL, EJS)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "seed:admin": "node scripts/seedAdmin.js",
+    "db:load": "node scripts/loadSchema.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-validator": "^7.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "method-override": "^3.0.0",
+    "mysql2": "^3.11.0",
+    "razorpay": "^2.9.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

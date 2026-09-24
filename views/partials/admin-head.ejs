@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Foodie Delight Admin</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="admin-wrapper">
+    <aside class="admin-sidebar">
+        <div class="admin-logo">
+            <img src="/img/logo.png" alt="Logo">
+            <span>Foodie Admin</span>
+        </div>
+        <nav class="admin-nav">
+            <a href="/admin/dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="/admin/menu"><i class="fas fa-utensils"></i> Menu Items</a>
+            <a href="/admin/orders"><i class="fas fa-receipt"></i> Orders</a>
+            <a href="/admin/messages"><i class="fas fa-envelope"></i> Messages</a>
+            <a href="/" target="_blank"><i class="fas fa-globe"></i> View Site</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <h2><%= title %></h2>
+            <span class="admin-user"><i class="fas fa-user-shield"></i> <%= currentUser ? currentUser.name : 'Admin' %></span>
+        </header>
+
+        <div class="admin-content">
+            <% if (typeof success !== 'undefined' && success && success.length) { %>
+                <div class="flash-message flash-success"><%= success[0] %></div>
+            <% } %>
+            <% if (typeof error !== 'undefined' && error && error.length) { %>
+                <div class="flash-message flash-error"><%= error[0] %></div>
+            <% } %>

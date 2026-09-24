@@ -1,0 +1,42 @@
+<%- include('../partials/admin-head') %>
+
+<form action="<%= formAction %>" method="POST" class="admin-form">
+    <div class="form-group">
+        <label for="name">Item Name</label>
+        <input type="text" id="name" name="name" value="<%= item ? item.name : '' %>" required>
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" name="description"><%= item ? item.description : '' %></textarea>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group">
+            <label for="price">Price (₹)</label>
+            <input type="number" id="price" name="price" step="0.01" min="0" value="<%= item ? item.price : '' %>" required>
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <input type="text" id="category" name="category" placeholder="e.g. pizza, burger, sandwich" value="<%= item ? item.category : '' %>" required>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="image">Image Path</label>
+        <input type="text" id="image" name="image" placeholder="img/food/example.jpg" value="<%= item ? item.image : '' %>">
+        <small>Path relative to the /public folder (e.g. img/food/p1.jpg)</small>
+    </div>
+
+    <div class="form-row checkboxes">
+        <label><input type="checkbox" name="is_featured" <%= item && item.is_featured ? 'checked' : '' %>> Featured on homepage</label>
+        <% if (item) { %>
+            <label><input type="checkbox" name="is_available" <%= item.is_available ? 'checked' : '' %>> Available on menu</label>
+        <% } %>
+    </div>
+
+    <button type="submit" class="btn-primary"><%= item ? 'Update Item' : 'Add Item' %></button>
+    <a href="/admin/menu" class="btn-small">Cancel</a>
+</form>
+
+<%- include('../partials/admin-foot') %>

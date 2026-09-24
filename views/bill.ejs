@@ -1,0 +1,69 @@
+<section class="bill-page">
+    <div class="container">
+        <h1>Order Bill - #<%= order.id %></h1>
+
+        <div id="billPreview" class="bill-preview">
+=====================================
+          FOODIE DELIGHT
+      ORDER RECEIPT & BILL
+=====================================
+
+Order ID: #<%= order.id %>
+Date: <%= new Date(order.created_at).toLocaleString() %>
+Status: <%= order.status.replace(/_/g, ' ') %>
+Payment Method: <%= order.payment_method === 'online' ? 'Paid Online' : 'Cash on Delivery' %>
+Payment Status: <%= order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1) %>
+
+Items:
+-------------------------------------
+<% order.items.forEach(item => { %>
+<%= item.item_name %>
+  Price: ₹<%= Number(item.item_price).toFixed(2) %> x <%= item.quantity %> = ₹<%= (item.item_price * item.quantity).toFixed(2) %>
+-------------------------------------
+<% }) %>
+
+Total Amount: ₹<%= Number(order.total_amount).toFixed(2) %>
+
+=====================================
+    Thank you for your order!
+  Visit us again at Foodie Delight
+=====================================
+        </div>
+
+        <div class="bill-actions">
+            <button class="btn-primary" id="downloadTxtBtn" style="background: #28a745;">Download as TXT</button>
+            <button class="btn-primary" id="downloadPdfBtn" style="background: #dc3545;">Print / Download as PDF</button>
+            <a href="/orders/my" class="btn-primary">Back to My Orders</a>
+        </div>
+    </div>
+</section>
+
+<script>
+    const billText = document.getElementById('billPreview').textContent.trim();
+
+    document.getElementById('downloadTxtBtn').addEventListener('click', () => {
+        const blob = new Blob([billText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'foodie-delight-bill-<%= order.id %>.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('downloadPdfBtn').addEventListener('click', () => {
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <html>
+            <head><title>Foodie Delight Bill</title>
+            <style>body{font-family:monospace;margin:20px;} pre{white-space:pre-wrap;}</style>
+            </head>
+            <body><pre>${billText}</pre>
+            <script>window.onload = function(){ window.print(); }<\/script>
+            </body></html>
+        `);
+        printWindow.document.close();
+    });
+</script>

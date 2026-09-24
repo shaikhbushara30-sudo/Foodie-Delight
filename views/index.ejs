@@ -1,0 +1,52 @@
+<section class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Delicious Food Delivered to Your Doorstep</h1>
+            <p>Order from our wide selection of mouth-watering dishes prepared by top chefs</p>
+            <a href="/menu" class="btn-primary">Order Now</a>
+        </div>
+    </div>
+</section>
+
+<section class="categories">
+    <div class="container">
+        <h2>Popular Categories</h2>
+        <div class="category-grid">
+            <a href="/menu?category=pizza" class="category-card">
+                <img src="/img/category/pizza.jpg" alt="Pizza">
+                <h3>Pizza</h3>
+            </a>
+            <a href="/menu?category=burger" class="category-card">
+                <img src="/img/category/burger.jpg" alt="Burgers">
+                <h3>Burgers</h3>
+            </a>
+            <a href="/menu?category=sandwich" class="category-card">
+                <img src="/img/category/sandwich.jpg" alt="Sandwiches">
+                <h3>Sandwiches</h3>
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="featured">
+    <div class="container">
+        <h2>Featured Items</h2>
+        <div class="food-grid" id="featuredFoods">
+            <% if (featuredFoods && featuredFoods.length) { %>
+                <% featuredFoods.forEach(food => { %>
+                    <div class="food-card">
+                        <img src="/<%= food.image %>" alt="<%= food.name %>">
+                        <div class="food-info">
+                            <h3><%= food.name %></h3>
+                            <p><%= food.description %></p>
+                            <span class="price">₹<%= Number(food.price).toFixed(2) %></span>
+                            <button class="add-to-cart" data-id="<%= food.id %>" data-name="<%= food.name %>" data-price="<%= food.price %>" data-image="<%= food.image %>">Add to Cart</button>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p>No featured items available right now.</p>
+            <% } %>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> - Foodie Delight</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <%- include('navbar') %>
+
+    <% if (typeof success !== 'undefined' && success && success.length) { %>
+        <div class="flash-message flash-success"><%= success[0] %></div>
+    <% } %>
+    <% if (typeof error !== 'undefined' && error && error.length) { %>
+        <div class="flash-message flash-error"><%= error[0] %></div>
+    <% } %>
+
+    <%- body %>
+
+    <%- include('cart-modal') %>
+    <%- include('footer') %>
+
+    <script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<%- include('../partials/admin-head') %>
+
+<div class="filter-buttons">
+    <a href="/admin/orders?status=all" class="filter-btn <%= activeStatus === 'all' ? 'active' : '' %>">All</a>
+    <% statuses.forEach(s => { %>
+        <a href="/admin/orders?status=<%= s %>" class="filter-btn <%= activeStatus === s ? 'active' : '' %>"><%= s.replace(/_/g,' ') %></a>
+    <% }) %>
+</div>
+
+<table class="admin-table">
+    <thead>
+        <tr><th>Order ID</th><th>Customer</th><th>Email</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th></th></tr>
+    </thead>
+    <tbody>
+        <% orders.forEach(o => { %>
+            <tr>
+                <td>#<%= o.id %></td>
+                <td><%= o.customer_name %></td>
+                <td><%= o.customer_email %></td>
+                <td>₹<%= Number(o.total_amount).toFixed(2) %></td>
+                <td>
+                    <%= o.payment_method === 'online' ? 'Online' : 'COD' %>
+                    <span class="payment-badge <%= o.payment_status %>"><%= o.payment_status %></span>
+                </td>
+                <td><span class="order-status status-<%= o.status %>"><%= o.status.replace(/_/g,' ') %></span></td>
+                <td><%= new Date(o.created_at).toLocaleString() %></td>
+                <td><a href="/admin/orders/<%= o.id %>" class="btn-small">View</a></td>
+            </tr>
+        <% }) %>
+        <% if (!orders.length) { %>
+            <tr><td colspan="8">No orders found.</td></tr>
+        <% } %>
+    </tbody>
+</table>
+
+<%- include('../partials/admin-foot') %>

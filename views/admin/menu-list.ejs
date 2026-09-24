@@ -1,0 +1,36 @@
+<%- include('../partials/admin-head') %>
+
+<div class="panel-actions">
+    <a href="/admin/menu/add" class="btn-primary"><i class="fas fa-plus"></i> Add New Item</a>
+</div>
+
+<table class="admin-table">
+    <thead>
+        <tr>
+            <th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Featured</th><th>Available</th><th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% items.forEach(item => { %>
+            <tr>
+                <td><img src="/<%= item.image %>" alt="<%= item.name %>" class="table-thumb"></td>
+                <td><%= item.name %></td>
+                <td><%= item.category %></td>
+                <td>₹<%= Number(item.price).toFixed(2) %></td>
+                <td><%= item.is_featured ? '✅' : '—' %></td>
+                <td><%= item.is_available ? '✅' : '❌' %></td>
+                <td class="table-actions">
+                    <a href="/admin/menu/edit/<%= item.id %>" class="btn-small">Edit</a>
+                    <form action="/admin/menu/delete/<%= item.id %>" method="POST" onsubmit="return confirm('Delete this item?');" style="display:inline;">
+                        <button type="submit" class="btn-small btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        <% if (!items.length) { %>
+            <tr><td colspan="7">No menu items yet. Add your first item!</td></tr>
+        <% } %>
+    </tbody>
+</table>
+
+<%- include('../partials/admin-foot') %>

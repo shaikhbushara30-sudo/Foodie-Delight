@@ -1,0 +1,33 @@
+<%- include('../partials/admin-head') %>
+
+<table class="admin-table">
+    <thead>
+        <tr><th>Name</th><th>Email</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        <% messages.forEach(m => { %>
+            <tr class="<%= m.is_read ? '' : 'row-unread' %>">
+                <td><%= m.name %></td>
+                <td><%= m.email %></td>
+                <td class="message-cell"><%= m.message %></td>
+                <td><%= new Date(m.created_at).toLocaleString() %></td>
+                <td><%= m.is_read ? 'Read' : 'Unread' %></td>
+                <td class="table-actions">
+                    <% if (!m.is_read) { %>
+                        <form action="/admin/messages/<%= m.id %>/read" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-small">Mark Read</button>
+                        </form>
+                    <% } %>
+                    <form action="/admin/messages/<%= m.id %>/delete" method="POST" onsubmit="return confirm('Delete this message?');" style="display:inline;">
+                        <button type="submit" class="btn-small btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        <% if (!messages.length) { %>
+            <tr><td colspan="6">No messages yet.</td></tr>
+        <% } %>
+    </tbody>
+</table>
+
+<%- include('../partials/admin-foot') %>

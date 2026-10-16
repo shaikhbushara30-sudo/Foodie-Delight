@@ -16,9 +16,9 @@ const { attachUserToLocals } = require('./middleware/authMiddleware');
 const siteRoutes = require('./routes/siteRoutes');
 const authRoutes = require('./routes/authRoutes');
 const orderRoutes = require('./routes/orderRoutes');
-const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', 1);
 
 // ---------- View Engine ----------
 app.set('view engine', 'ejs');
@@ -45,7 +45,11 @@ app.use(attachUserToLocals);
 app.use('/', siteRoutes);
 app.use('/', authRoutes);
 app.use('/', orderRoutes);
-app.use('/admin', adminRoutes);
+
+// Health check (for cloud platforms)
+app.get('/health', (req, res) => res.send('ok'));
+
+// NOTE: the admin panel is NOT part of this app. It runs separately (admin-app.js).
 
 // ---------- 404 Handler ----------
 app.use((req, res) => {

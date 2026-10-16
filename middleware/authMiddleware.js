@@ -1,13 +1,25 @@
 // ============================================
 // Auth Middleware (JWT-based, cookie-stored)
 // ============================================
-const { verifyToken } = require('../utils/jwt');
+const { verifyToken, COOKIE_NAME } = require('../utils/jwt');
+
+// APP_MODE=admin -> admin panel app (only admins allowed)
+// otherwise     -> public user site (admins are NEVER recognised here)
+const IS_ADMIN_APP = process.env.APP_MODE === 'admin';
 
 // Reads the JWT from the httpOnly cookie (if present & valid) and attaches
 // the decoded user to req.user. Runs on every request, before routes.
 function attachUserToLocals(req, res, next) {
-    const token = req.cookies ? req.cookies.token : null;
-    const decoded = token ? verifyToken(token) : null;
+    const token = req.cookies ? req.cookies[COOKIE_NAME] : null;
+    let decoded = token ? verifyToken(token) : null;
+
+    // Hard separation of the two sites:
+    //  - user site ignores any admin token
+    //  - admin site ignores any non-admin token
+    if (decoded) {
+        const isAdminToken = decoded.role === 'admin';
+        if (IS_ADMIN_APP !== isAdminToken) decoded = null;
+    }
 
     req.user = decoded || null;
     res.locals.currentUser = decoded || null;
@@ -28,10 +40,6 @@ function isAuthenticated(req, res, next) {
 function isCustomer(req, res, next) {
     if (req.user && req.user.role === 'customer') {
         return next();
-    }
-    if (req.user && req.user.role === 'admin') {
-        req.flash('error', 'Admin accounts cannot place orders. Please use a customer account.');
-        return res.redirect('/admin/dashboard');
     }
     req.flash('error', 'Please log in to continue.');
     return res.redirect('/login');

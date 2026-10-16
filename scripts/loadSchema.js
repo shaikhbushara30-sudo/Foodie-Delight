@@ -31,12 +31,13 @@ async function loadSchema() {
     let connection;
     try {
         connection = await mysql.createConnection({
-            host: process.env.DB_HOST || 'localhost',
+            host: process.env.DB_HOST,
             port: process.env.DB_PORT || 3306,
-            user: process.env.DB_USER || 'root',
-            password: process.env.DB_PASSWORD || '',
+            user: process.env.DB_USER,
+            password: process.env.DB_PASSWORD,
             connectTimeout: 20000,
-            multipleStatements: false
+            multipleStatements: false,
+            ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true} : undefined
         });
 
         console.log('✅ Connected to MySQL server');

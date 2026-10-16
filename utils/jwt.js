@@ -23,4 +23,8 @@ function verifyToken(token) {
     }
 }
 
-module.exports = { signToken, verifyToken };
+// The user site and the admin site use DIFFERENT cookie names, so a login on one
+// can never be read by the other (cookies are shared across ports on localhost).
+const COOKIE_NAME = process.env.APP_MODE === 'admin' ? 'admin_token' : 'token';
+
+module.exports = { signToken, verifyToken, COOKIE_NAME };

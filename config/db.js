@@ -12,7 +12,8 @@ const pool = mysql.createPool({
     database: process.env.DB_NAME || 'foodie_delight',
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: true } : undefined
 });
 
 // Quick connectivity check on startup (non-fatal, just logs)

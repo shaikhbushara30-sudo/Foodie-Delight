@@ -21,16 +21,6 @@
                             <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                         </ul>
                     </li>
-                <% } else if (currentUser && currentUser.role === 'admin') { %>
-                    <li><a href="/admin/dashboard">Admin Dashboard</a></li>
-                    <li class="profile-menu">
-                        <a href="#" class="profile-toggle" id="profileToggle">
-                            <i class="fas fa-user-shield"></i> <%= currentUser.name %> <i class="fas fa-caret-down"></i>
-                        </a>
-                        <ul class="dropdown-menu" id="profileDropdown">
-                            <li><a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                        </ul>
-                    </li>
                 <% } else { %>
                     <li><a href="/login">Login</a></li>
                     <li><a href="/signup">Sign Up</a></li>

@@ -6,17 +6,17 @@
 // ============================================
 const bcrypt = require('bcryptjs');
 const UserModel = require('../models/userModel');
-const { signToken } = require('../utils/jwt');
+const { signToken, COOKIE_NAME } = require('../utils/jwt');
 
 const TOKEN_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days, matches JWT_EXPIRES_IN default
 
 function setAuthCookie(res, user) {
     const token = signToken(user);
-    res.cookie('token', token, {
+    res.cookie(COOKIE_NAME, token, {
         httpOnly: true,       // not accessible via client-side JS (XSS protection)
         maxAge: TOKEN_MAX_AGE,
-        sameSite: 'lax'
-        // secure: true,      // uncomment once served over HTTPS in production
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production'   // HTTPS only in production
     });
 }
 
@@ -44,8 +44,9 @@ const authController = {
                 return res.redirect('/signup');
             }
 
+            const adminEmail = (process.env.ADMIN_EMAIL || 'admin@foodiedelight.com').toLowerCase();
             const existing = await UserModel.findByEmail(email);
-            if (existing) {
+            if (existing || String(email).toLowerCase() === adminEmail) {
                 req.flash('error', 'An account with this email already exists.');
                 return res.redirect('/signup');
             }
@@ -88,11 +89,13 @@ const authController = {
                 return res.redirect('/login');
             }
 
-            setAuthCookie(res, { id: user.id, name: user.name, email: user.email, role: user.role });
-
-            if (user.role === 'admin') {
-                return res.redirect('/admin/dashboard');
+            // Admin accounts can NEVER log in through the public user site
+            if (user.role !== 'customer') {
+                req.flash('error', 'Invalid email or password.');
+                return res.redirect('/login');
             }
+
+            setAuthCookie(res, { id: user.id, name: user.name, email: user.email, role: user.role });
             req.flash('success', `Welcome back, ${user.name}!`);
             return res.redirect('/');
         } catch (err) {
@@ -113,7 +116,8 @@ const authController = {
             const { email, password } = req.body;
             const user = await UserModel.findByEmail(email);
 
-            if (!user || user.role !== 'admin') {
+            const ownerEmail = (process.env.ADMIN_EMAIL || 'admin@foodiedelight.com').toLowerCase();
+            if (!user || user.role !== 'admin' || String(user.email).toLowerCase() !== ownerEmail) {
                 req.flash('error', 'Invalid admin credentials.');
                 return res.redirect('/admin/login');
             }
@@ -136,7 +140,7 @@ const authController = {
     // GET /logout (works for both customer & admin — just clears the JWT cookie)
     logout(req, res) {
         const wasAdmin = req.user && req.user.role === 'admin';
-        res.clearCookie('token');
+        res.clearCookie(COOKIE_NAME);
         res.redirect(wasAdmin ? '/admin/login' : '/login');
     }
 };

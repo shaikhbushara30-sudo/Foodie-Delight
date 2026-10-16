@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "description": "Foodie Delight - Online Food Ordering App (MVC, Node.js, Express, MySQL, EJS)",
   "main": "app.js",
-  "scripts": {
+    "scripts": {
     "start": "node app.js",
+    "start:admin": "node admin-app.js",
     "dev": "nodemon app.js",
+    "dev:admin": "nodemon admin-app.js",
     "seed:admin": "node scripts/seedAdmin.js",
     "db:load": "node scripts/loadSchema.js"
   },

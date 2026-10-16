@@ -206,7 +206,8 @@ header .container {
 
 .category-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 370px));
+    justify-content: center;
     gap: 30px;
 }
 
@@ -217,6 +218,7 @@ header .container {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease;
     text-align: center;
+    text-decoration: none;
 }
 
 .category-card:hover {
@@ -233,6 +235,7 @@ header .container {
     padding: 20px;
     font-size: 1.5rem;
     color: #1e3c72;
+   
 }
 
 /* Featured Items Section */

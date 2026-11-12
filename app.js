@@ -33,12 +33,7 @@ app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 
-// Flash messages (cookie-based, one-shot) — no session required
 app.use(flashMiddleware);
-
-// Decode JWT cookie (if present) -> req.user + res.locals.currentUser
-// This is what keeps people logged in even after the server restarts,
-// since the token lives in the browser's cookie, not server memory.
 app.use(attachUserToLocals);
 
 // ---------- Routes ----------
@@ -46,23 +41,19 @@ app.use('/', siteRoutes);
 app.use('/', authRoutes);
 app.use('/', orderRoutes);
 
-// Health check (for cloud platforms)
+
 app.get('/health', (req, res) => res.send('ok'));
-
-// NOTE: the admin panel is NOT part of this app. It runs separately (admin-app.js).
-
-// ---------- 404 Handler ----------
 app.use((req, res) => {
     res.status(404).render('404', { title: 'Page Not Found', layout: 'partials/layout' });
 });
 
-// ---------- Error Handler ----------
+
 app.use((err, req, res, next) => {
     console.error('Unhandled error:', err);
     res.status(500).send('Something went wrong on our end. Please try again later.');
 });
 
-// ---------- Start Server ----------
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🍔 Foodie Delight server running at http://localhost:${PORT}`);

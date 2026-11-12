@@ -1,10 +1,4 @@
-// ============================================
-// Foodie Delight - ADMIN PANEL (separate app)
-// Runs on its own port / own domain, separate from the public user site.
-// Uses the same database, but a different login cookie (admin_token).
-// Start: npm run dev:admin   (local)   |   npm run start:admin  (production)
-// ============================================
-process.env.APP_MODE = 'admin';   // must be set BEFORE loading anything else
+process.env.APP_MODE = 'admin';  
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
